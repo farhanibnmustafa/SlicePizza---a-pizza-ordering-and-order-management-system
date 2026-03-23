@@ -21,7 +21,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <NextAuthProvider>
-          <MainLayout>{children}</MainLayout>
+          <div suppressHydrationWarning>
+            <MainLayout>{children}</MainLayout>
+          </div>
         </NextAuthProvider>
       </body>
     </html>

@@ -52,8 +52,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     jwt({ token, user }) {
       if (user) {
-        token.id = user.id
-        token.role = (user as { role?: string }).role;
+        token.id = user.id;
+        const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
+        const userEmail = user.email?.toLowerCase();
+        
+        if (userEmail && adminEmails.includes(userEmail)) {
+          token.role = 'admin';
+        } else {
+          token.role = (user as { role?: string }).role || 'customer';
+        }
       }
       return token
     },
