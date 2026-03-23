@@ -1,0 +1,176 @@
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}
+
+.headerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logoIcon {
+    color: var(--primary);
+}
+
+.logoText {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.highlight {
+    color: var(--primary);
+}
+
+.rightSection {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ── Sign In button ─────────────────────────────── */
+.signInBtn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(242, 102, 34, 0.12);
+    border: 1px solid rgba(242, 102, 34, 0.35);
+    color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: inherit;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.signInBtn:hover {
+    background: rgba(242, 102, 34, 0.22);
+    transform: translateY(-1px);
+}
+
+/* ── Logged-in user menu ────────────────────────── */
+.userMenu {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    padding: 5px 5px 5px 10px;
+}
+
+.avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.userName {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.userActions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ordersLink {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ordersLink:hover {
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.logoutBtn {
+    background: rgba(255,255,255,0.06);
+    border: none;
+    color: rgba(255,255,255,0.45);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.logoutBtn:hover {
+    background: rgba(239,68,68,0.15);
+    color: #f87171;
+}
+
+/* ── Cart button ────────────────────────────────── */
+.cartButton {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 10px;
+    border-radius: 50%;
+    color: var(--text-main);
+    position: relative;
+    transition: all var(--transition-fast);
+}
+
+.cartButton:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+    transform: scale(1.05);
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    height: 20px;
+    min-width: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
