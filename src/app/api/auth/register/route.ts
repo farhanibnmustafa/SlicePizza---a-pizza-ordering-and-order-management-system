@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
             name: name.trim(),
             email: email.toLowerCase().trim(),
             hashedPassword: await hashPassword(password),
+            role: 'customer',
             createdAt: new Date().toISOString(),
         });
 

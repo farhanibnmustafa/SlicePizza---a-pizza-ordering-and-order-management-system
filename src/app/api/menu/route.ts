@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET() {
     try {
         const [pizzasRes, toppingsRes] = await Promise.all([
-            supabase.from('pizzas').select('*'),
-            supabase.from('toppings').select('*')
+            supabaseAdmin.from('pizzas').select('*'),
+            supabaseAdmin.from('toppings').select('*')
         ]);
 
         if (pizzasRes.error) throw pizzasRes.error;
