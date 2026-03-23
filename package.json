@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "next build && playwright test"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.11.1",
