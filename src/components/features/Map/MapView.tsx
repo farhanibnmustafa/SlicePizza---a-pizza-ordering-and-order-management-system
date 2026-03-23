@@ -1,9 +1,9 @@
 'use client';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { LocateFixed, MapPin, Navigation } from 'lucide-react';
+import { LocateFixed } from 'lucide-react';
 import styles from './Map.module.css';
 
 // Fix for default Leaflet icons in Next.js
@@ -66,7 +66,7 @@ export default function MapView({ mode, onLocationSelect, userLocation }: MapVie
             const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
             const data = await res.json();
             return data.display_name || 'Selected Location';
-        } catch (err) {
+        } catch {
             return 'Selected Location';
         }
     };
@@ -98,7 +98,7 @@ export default function MapView({ mode, onLocationSelect, userLocation }: MapVie
     useEffect(() => {
         if (mode === 'tracker' && userLocation) {
             // Animate car from shop to user over 30 seconds
-            let start = Date.now();
+            const start = Date.now();
             const duration = 30000;
             const animate = () => {
                 const now = Date.now();

@@ -20,7 +20,9 @@ export default function OrderSuccessPage() {
     const [order, setOrder] = useState<Order | null>(null);
 
     useEffect(() => {
-        setMounted(true);
+        // Delay mount state to avoid synchronous state update in effect body
+        setTimeout(() => setMounted(true), 0);
+        
         const fetchOrder = () => {
             fetch('/api/orders')
                 .then(res => res.json())
@@ -79,7 +81,7 @@ export default function OrderSuccessPage() {
                         <div className={styles.stepIcon}><CheckCircle size={20} /></div>
                         <div className={styles.stepContent}>
                             <h4>Order Received</h4>
-                            <p>We've received your order.</p>
+                            <p>We&apos;ve received your order.</p>
                         </div>
                     </div>
                     <div className={`${styles.step} ${currentStep >= 2 ? styles.active : ''}`}>

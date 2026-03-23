@@ -8,14 +8,14 @@ const VALID_STATUSES: OrderStatus[] = [
     'Pending Payment', 'Preparing', 'Out for Delivery', 'Delivered', 'Cancelled'
 ];
 
-function isAdmin(user?: any): boolean {
+function isAdmin(user?: { email?: string | null; name?: string | null }): boolean {
     if (!user) return false;
     const sessionEmail = user.email?.toLowerCase() || '';
     const sessionName = user.name?.toLowerCase().replace(/\s+/g, '') || '';
     const adminConfig = (process.env.ADMIN_EMAILS || '').toLowerCase();
 
-    return (sessionEmail && adminConfig.includes(sessionEmail)) || 
-           (sessionName && adminConfig.includes(sessionName));
+    return !!((sessionEmail && adminConfig.includes(sessionEmail)) || 
+             (sessionName && adminConfig.includes(sessionName)));
 }
 
 // PATCH — update a single order's status

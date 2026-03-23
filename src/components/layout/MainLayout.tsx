@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { CartSidebar } from '@/components/features/CartSidebar';

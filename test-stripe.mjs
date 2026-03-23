@@ -9,15 +9,15 @@ async function testStripe() {
     if (!process.env.STRIPE_SECRET_KEY) return;
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-        apiVersion: '2025-02-15.acacia' as any,
+        apiVersion: '2025-02-15.acacia',
     });
 
     try {
         const session = await stripe.checkout.sessions.list({ limit: 1 });
         console.log('Successfully connected to Stripe Sandbox (Test Mode)!');
         console.log('Latest session ID:', session.data[0]?.id || 'None (no sessions yet)');
-    } catch (err: any) {
-        console.error('Stripe Connection Error:', err.message);
+    } catch (err) {
+        console.error('Stripe Connection Error:', err instanceof Error ? err.message : 'Unknown');
     }
 }
 

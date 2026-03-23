@@ -43,7 +43,7 @@ export default function AdminDashboardPage() {
         <>
             <div className="admin-page-header" suppressHydrationWarning>
                 <h1>Dashboard</h1>
-                <p>Welcome back! Here's what's happening at SlicePizza.</p>
+                <p>Welcome back! Here&apos;s what&apos;s happening at SlicePizza.</p>
             </div>
 
             <div className="admin-stats-grid">

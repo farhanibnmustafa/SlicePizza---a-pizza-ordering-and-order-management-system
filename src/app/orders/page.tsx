@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Package, MapPin, Clock } from 'lucide-react';
+import { Package } from 'lucide-react';
 import { Order } from '@/types';
 import styles from './page.module.css';
 

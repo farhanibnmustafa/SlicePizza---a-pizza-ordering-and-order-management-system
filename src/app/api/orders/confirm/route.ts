@@ -4,7 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase';
 import { sendOrderConfirmationEmail } from '@/lib/mail';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2026-02-25.clover' as any,
+    apiVersion: '2025-02-24.clover' as Stripe.LatestApiVersion,
 });
 
 // Confirm Stripe payment and finalize order
@@ -40,16 +40,20 @@ export async function POST(request: NextRequest) {
 
         // Dispatch Receipt Email using Nodemailer logic
         const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-        const mappedOrder = {
+        await sendOrderConfirmationEmail({
             ...updatedOrder,
             customerDetails: updatedOrder.customer_details,
-        };
-        await sendOrderConfirmationEmail(mappedOrder as any, baseUrl);
+            deliveryFee: updatedOrder.delivery_fee,
+            userId: updatedOrder.user_id,
+            createdAt: updatedOrder.created_at,
+            statusHistory: updatedOrder.status_history || [],
+        } as import('@/types').Order, baseUrl);
 
         return NextResponse.json({ success: true, orderId: updatedOrder.id }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
         console.error('Confirm Order Error:', error);
-        return NextResponse.json({ error: error.message || 'Failed to confirm Stripe checkout session' }, { status: 500 });
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

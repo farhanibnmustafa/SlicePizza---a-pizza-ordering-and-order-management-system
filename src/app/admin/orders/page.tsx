@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import { X, Package, MapPin, User, Phone, Mail, Info } from 'lucide-react';
+import { X, Package, MapPin, User } from 'lucide-react';
+import Image from 'next/image';
 
 interface Order {
     id: string;
@@ -9,7 +10,16 @@ interface Order {
     subtotal: number;
     deliveryFee: number;
     tax: number;
-    items: any[];
+    items: {
+        pizza: {
+            name: string;
+            imageUrl: string;
+        };
+        quantity: number;
+        size: string;
+        crust: string;
+        extraToppings?: { name: string }[];
+    }[];
     customerDetails: { name: string; email: string; address: string; phone: string };
     createdAt: string;
 }
@@ -214,12 +224,15 @@ export default function AdminOrdersPage() {
                                 <h3><Package size={16} /> Items to Prepare</h3>
                                 {selectedOrder.items?.map((item, idx) => (
                                     <div key={idx} className="admin-receipt-item">
-                                        <img 
-                                            src={item.pizza.imageUrl} 
-                                            alt={item.pizza.name} 
-                                            className="admin-receipt-img"
-                                            onError={(e) => { (e.target as HTMLImageElement).src = '/images/pizza-placeholder.jpg'; }}
-                                        />
+                                        <div className="admin-receipt-img-wrapper" style={{ position: 'relative', width: '48px', height: '48px', borderRadius: '8px', overflow: 'hidden' }}>
+                                            <Image 
+                                                src={item.pizza.imageUrl} 
+                                                alt={item.pizza.name} 
+                                                fill
+                                                style={{ objectFit: 'cover' }}
+                                                unoptimized // images might be external URLs
+                                            />
+                                        </div>
                                         <div className="admin-receipt-body">
                                             <div className="admin-receipt-info">
                                                 <span className="admin-receipt-name">{item.pizza.name}</span>
@@ -227,8 +240,8 @@ export default function AdminOrdersPage() {
                                             </div>
                                             <div className="admin-receipt-details">
                                                 Size: {item.size} • {item.crust} Crust
-                                                {item.extraToppings?.length > 0 && (
-                                                    <div>Extra: {item.extraToppings.map((t: any) => t.name).join(', ')}</div>
+                                                {item.extraToppings && item.extraToppings.length > 0 && (
+                                                    <div>Extra: {item.extraToppings.map(t => t.name).join(', ')}</div>
                                                 )}
                                             </div>
                                         </div>

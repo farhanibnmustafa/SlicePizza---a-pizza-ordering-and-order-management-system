@@ -17,7 +17,7 @@ export const AuthModal = ({ onClose, defaultTab = 'login' }: AuthModalProps) => 
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { data: session } = useSession();
+    useSession();
     const overlayRef = useRef<HTMLDivElement>(null);
 
     // Close on Escape key
@@ -36,7 +36,6 @@ export const AuthModal = ({ onClose, defaultTab = 'login' }: AuthModalProps) => 
         setError('');
         setLoading(true);
 
-        const endpoint = tab === 'login' ? '/api/auth/login' : '/api/auth/register';
         const body = tab === 'login'
             ? { email, password }
             : { name, email, password };

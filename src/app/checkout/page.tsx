@@ -14,7 +14,7 @@ const MapView = dynamic(() => import('@/components/features/Map/MapView'), {
 
 export default function CheckoutPage() {
     const router = useRouter();
-    const { items, getSubtotal, clearCart } = useCartStore();
+    const { items, getSubtotal } = useCartStore();
     const { data: session, status } = useSession();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({

@@ -17,7 +17,7 @@ export default auth((req) => {
     }
 
     // Check if user has admin or staff role
-    const isAdmin = session.user && ((session.user as any).role === 'admin' || (session.user as any).role === 'staff');
+    const isAdmin = session.user && ((session.user as { role?: string }).role === 'admin' || (session.user as { role?: string }).role === 'staff');
 
     if (!isAdmin) {
         return NextResponse.redirect(new URL('/admin/unauthorized', req.url));

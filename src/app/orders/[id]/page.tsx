@@ -9,7 +9,7 @@ import styles from './page.module.css';
 
 export default function OrderDetailsPage() {
     const { id } = useParams();
-    const { data: session, status } = useSession();
+    const { status } = useSession();
     const router = useRouter();
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
@@ -54,7 +54,7 @@ export default function OrderDetailsPage() {
             <div className={`container ${styles.page}`}>
                 <div style={{ textAlign: 'center', padding: '60px' }}>
                     <h2>Order not found</h2>
-                    <p>We couldn't find the order you're looking for.</p>
+                    <p>We couldn&apos;t find the order you&apos;re looking for.</p>
                     <Link href="/orders" className={styles.backBtn} style={{ margin: '24px auto' }}>
                         <ChevronLeft size={20} /> Back to Orders
                     </Link>

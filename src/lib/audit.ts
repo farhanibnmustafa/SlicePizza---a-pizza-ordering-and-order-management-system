@@ -5,7 +5,7 @@ export async function logAction(params: {
     action: string;
     entityType: string;
     entityId: string;
-    details?: any;
+    details?: Record<string, unknown>;
 }) {
     try {
         const { error } = await supabaseAdmin

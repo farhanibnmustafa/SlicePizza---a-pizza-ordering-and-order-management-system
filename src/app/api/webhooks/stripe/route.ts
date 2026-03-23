@@ -4,7 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase';
 import { sendOrderConfirmationEmail } from '@/lib/mail';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2026-02-25.clover' as any,
+    apiVersion: '2025-02-24.clover' as Stripe.LatestApiVersion,
 });
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -20,9 +20,10 @@ export async function POST(req: NextRequest) {
             throw new Error('Missing stripe-signature or endpointSecret');
         }
         event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
-    } catch (err: any) {
-        console.error(`Webhook Error: ${err.message}`);
-        return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
+    } catch (err) {
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        console.error(`Webhook Error: ${message}`);
+        return NextResponse.json({ error: `Webhook Error: ${message}` }, { status: 400 });
     }
 
     // Handle the checkout.session.completed event
@@ -47,8 +48,12 @@ export async function POST(req: NextRequest) {
                 const mappedOrder = {
                     ...updatedOrder,
                     customerDetails: updatedOrder.customer_details,
+                    deliveryFee: updatedOrder.delivery_fee,
+                    userId: updatedOrder.user_id,
+                    createdAt: updatedOrder.created_at,
+                    statusHistory: updatedOrder.status_history || [],
                 };
-                await sendOrderConfirmationEmail(mappedOrder as any, baseUrl);
+                await sendOrderConfirmationEmail(mappedOrder as import('@/types').Order, baseUrl);
                 
                 console.log(`Order ${orderId} successfully processed via Webhook.`);
             } catch (err) {

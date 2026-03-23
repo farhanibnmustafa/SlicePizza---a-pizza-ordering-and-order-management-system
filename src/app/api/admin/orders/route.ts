@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabaseAdmin } from '@/lib/supabase';
 
-function isAdmin(user?: any): boolean {
+function isAdmin(user?: { email?: string | null; name?: string | null }): boolean {
     if (!user) return false;
     const sessionEmail = user.email?.toLowerCase() || '';
     const sessionName = user.name?.toLowerCase().replace(/\s+/g, '') || '';
     const adminConfig = (process.env.ADMIN_EMAILS || '').toLowerCase();
 
-    return (sessionEmail && adminConfig.includes(sessionEmail)) || 
-           (sessionName && adminConfig.includes(sessionName));
+    return !!((sessionEmail && adminConfig.includes(sessionEmail)) || 
+             (sessionName && adminConfig.includes(sessionName)));
 }
 
 // GET all orders (admin only)
@@ -110,8 +110,9 @@ export async function PATCH(req: NextRequest) {
         });
 
         return NextResponse.json({ success: true, order: updatedOrder });
-    } catch (error: any) {
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to update order status';
         console.error('Update order status error:', error);
-        return NextResponse.json({ error: error.message || 'Failed to update order status' }, { status: 500 });
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

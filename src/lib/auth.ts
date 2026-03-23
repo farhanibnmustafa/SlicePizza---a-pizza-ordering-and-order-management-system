@@ -50,7 +50,7 @@ export const userStore = {
             .single();
         
         if (error) throw error;
-        return user;
+        return data;
     },
     exists: async (email: string) => {
         const { count, error } = await supabaseAdmin

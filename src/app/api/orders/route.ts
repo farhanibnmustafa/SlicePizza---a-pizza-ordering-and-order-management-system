@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { Order } from '@/types';
 import { auth } from '@/auth';
 
 // Explicitly require the secret key
@@ -15,7 +14,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 import { supabaseAdmin } from '@/lib/supabase';
 
 // GET user orders
-export async function GET(request: NextRequest) {
+export async function GET() {
     try {
         const session = await auth();
         const userId = session?.user?.email || session?.user?.id;
@@ -93,13 +92,13 @@ export async function POST(request: NextRequest) {
         const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
         // CREATE STRIPE CHECKOUT SESSION
-        const lineItems = body.items.map((item: any) => {
+        const lineItems = body.items.map((item) => {
             return {
                 price_data: {
                     currency: 'usd',
                     product_data: {
                         name: `${item.pizza.name} (${item.size}, ${item.crust} crust)`,
-                        description: `Extra toppings: ${item.extraToppings?.map((t: any) => t.name).join(', ') || 'None'}`,
+                        description: `Extra toppings: ${item.extraToppings?.map((t) => t.name).join(', ') || 'None'}`,
                         images: [baseUrl + item.pizza.imageUrl],
                     },
                     unit_amount: Math.round(item.itemTotal * 100),
@@ -155,8 +154,9 @@ export async function POST(request: NextRequest) {
             message: 'Proceed to Stripe Checkout'
         }, { status: 201 });
 
-    } catch (error: any) {
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to process order';
         console.error('Order creation error:', error);
-        return NextResponse.json({ error: error.message || 'Failed to process order' }, { status: 500 });
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

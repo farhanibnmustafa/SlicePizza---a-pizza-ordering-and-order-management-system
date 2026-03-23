@@ -12,9 +12,11 @@ function ConfirmOrderContent() {
 
     useEffect(() => {
         if (!sessionId) {
-            setStatus('Invalid payment session.');
-            setTimeout(() => router.push('/'), 3000);
-            return;
+            if (status !== 'Invalid payment session.') {
+                setTimeout(() => setStatus('Invalid payment session.'), 0);
+            }
+            const timer = setTimeout(() => router.push('/'), 3000);
+            return () => clearTimeout(timer);
         }
 
         const confirmPayment = async () => {
@@ -29,23 +31,30 @@ function ConfirmOrderContent() {
                 
                 if (res.ok) {
                     clearCart();
-                    setStatus('Payment confirmed! Preparing your receipt...');
+                    if (status !== 'Payment confirmed! Preparing your receipt...') {
+                        setStatus('Payment confirmed! Preparing your receipt...');
+                    }
                     // Redirect to standard success progress tracking page
                     setTimeout(() => {
                         router.push(`/checkout/success/${data.orderId}`);
                     }, 1000);
                 } else {
-                    setStatus(`Payment failed: ${data.error}`);
+                    const errorMsg = `Payment failed: ${data.error}`;
+                    if (status !== errorMsg) {
+                        setStatus(errorMsg);
+                    }
                     setTimeout(() => router.push('/checkout'), 3000);
                 }
             } catch (error) {
                 console.error(error);
-                setStatus('Failed to verify payment with server.');
+                if (status !== 'Failed to verify payment with server.') {
+                    setStatus('Failed to verify payment with server.');
+                }
             }
         };
 
         confirmPayment();
-    }, [sessionId, router, clearCart]);
+    }, [sessionId, router, clearCart, status]);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', textAlign: 'center' }} suppressHydrationWarning>
