@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server';
 export default auth((req) => {
     const { pathname } = req.nextUrl;
 
-    // Only run on admin routes
-    if (!pathname.startsWith('/admin')) {
+    // Only run on admin routes, but skip unauthorized page
+    if (!pathname.startsWith('/admin') || pathname === '/admin/unauthorized') {
         return NextResponse.next();
     }
 

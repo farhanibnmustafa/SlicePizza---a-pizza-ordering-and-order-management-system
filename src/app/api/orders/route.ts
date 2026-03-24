@@ -8,7 +8,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: '2026-02-25.clover',
+    apiVersion: '2024-12-18.acacia' as any,
 });
 
 import { supabaseAdmin } from '@/lib/supabase';
@@ -17,7 +17,7 @@ import { supabaseAdmin } from '@/lib/supabase';
 export async function GET() {
     try {
         const session = await auth();
-        const userId = session?.user?.email || session?.user?.id;
+        const userId = session?.user?.id || session?.user?.email;
 
         if (!userId) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
         const body = validation.data;
 
         const orderId = `ORD-${Math.floor(Math.random() * 100000)}`;
-        const userId = session?.user?.email || session?.user?.id || body.customerDetails.email;
+        const userId = session?.user?.id || session?.user?.email || body.customerDetails.email;
 
         // INSERT ORDER INTO SUPABASE
         const { error: dbError } = await supabaseAdmin

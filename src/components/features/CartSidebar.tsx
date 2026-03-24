@@ -24,7 +24,7 @@ export const CartSidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                         <div className={styles.empty} suppressHydrationWarning>
                             <ShoppingBag size={48} className={styles.emptyIcon} />
                             <p>Your cart is empty.</p>
-                            <Button onClick={onClose} variant="primary">Add some pizzas!</Button>
+                            <Button onClick={() => { router.push('/'); onClose(); }} variant="primary" suppressHydrationWarning>Add some pizzas!</Button>
                         </div>
                     ) : (
                         <div className={styles.itemList}>
