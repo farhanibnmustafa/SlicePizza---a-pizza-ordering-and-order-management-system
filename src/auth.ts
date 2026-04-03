@@ -2,14 +2,9 @@ import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import Facebook from "next-auth/providers/facebook"
 import Credentials from "next-auth/providers/credentials"
-import { SupabaseAdapter } from "@auth/supabase-adapter"
 import { userStore, verifyPassword } from "@/lib/auth"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: SupabaseAdapter({
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    secret: process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  }),
   secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
   trustHost: true,
   providers: [
