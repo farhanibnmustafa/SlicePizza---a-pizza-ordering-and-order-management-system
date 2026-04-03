@@ -18,17 +18,27 @@ import { supabaseAdmin } from '@/lib/supabase';
 export async function GET() {
     try {
         const session = await auth();
-        const userId = session?.user?.id || session?.user?.email;
+        // Email is the most stable identifier across all providers and sessions
+        const userEmail = session?.user?.email;
+        const userId = session?.user?.id;
 
-        if (!userId) {
+        if (!userEmail && !userId) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { data: userOrders, error } = await supabaseAdmin
+        // Query by both email and provider ID to catch orders stored under either format
+        let query = supabaseAdmin
             .from('orders')
             .select('*')
-            .eq('user_id', userId)
             .order('created_at', { ascending: false });
+
+        if (userEmail && userId && userEmail !== userId) {
+            query = query.or(`user_id.eq.${userEmail},user_id.eq.${userId}`);
+        } else {
+            query = query.eq('user_id', userEmail || userId);
+        }
+
+        const { data: userOrders, error } = await query;
 
         if (error) throw error;
 
@@ -69,7 +79,8 @@ export async function POST(request: NextRequest) {
         const body = validation.data;
 
         const orderId = `ORD-${Math.floor(Math.random() * 100000)}`;
-        const userId = session?.user?.id || session?.user?.email || body.customerDetails.email;
+        // Always use email as user_id — consistent across all login methods and sessions
+        const userId = session?.user?.email || body.customerDetails.email;
 
         // INSERT ORDER INTO SUPABASE
         const { error: dbError } = await supabaseAdmin
