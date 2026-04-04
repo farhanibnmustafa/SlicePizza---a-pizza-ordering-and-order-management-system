@@ -15,7 +15,7 @@ const MapView = dynamic(() => import('@/components/features/Map/MapView'), {
 export default function CheckoutPage() {
     const router = useRouter();
     const { items, getSubtotal } = useCartStore();
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -38,13 +38,6 @@ export default function CheckoutPage() {
             }));
         }
     }, [session]);
-
-    // Auth guard — redirect to home if not authenticated
-    useEffect(() => {
-        if (status === 'unauthenticated') {
-            router.replace('/');
-        }
-    }, [status, router]);
 
     const subtotal = getSubtotal();
     const tax = subtotal * 0.08;
