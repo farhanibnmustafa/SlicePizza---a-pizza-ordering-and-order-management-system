@@ -48,6 +48,22 @@ function ChangeView({ center }: { center: [number, number] }) {
     return null;
 }
 
+function FitBounds({ bounds }: { bounds: L.LatLngBoundsExpression }) {
+    const map = useMap();
+    
+    // We only want to trigger a map bounds change when the actual coordinate values change, 
+    // not every time the array reference changes (which is 60fps during carPos animation)
+    const boundsString = JSON.stringify(bounds);
+    
+    useEffect(() => {
+        if (bounds) {
+            map.fitBounds(bounds, { padding: [50, 50] });
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [boundsString, map]);
+    return null;
+}
+
 interface MapViewProps {
     mode: 'picker' | 'tracker';
     onLocationSelect?: (lat: number, lng: number, address: string) => void;
@@ -98,6 +114,12 @@ export default function MapView({ mode, onLocationSelect, userLocation }: MapVie
 
     useEffect(() => {
         if (mode === 'tracker' && userLocation) {
+            // Safe parsing in case db stored strings
+            const destLat = Number(userLocation[0]);
+            const destLng = Number(userLocation[1]);
+            
+            if (isNaN(destLat) || isNaN(destLng)) return;
+
             // Animate car from shop to user over 30 seconds
             const start = Date.now();
             const duration = 30000;
@@ -105,8 +127,8 @@ export default function MapView({ mode, onLocationSelect, userLocation }: MapVie
                 const now = Date.now();
                 const progress = Math.min((now - start) / duration, 1);
                 
-                const currentLat = SHOP_POSITION[0] + (userLocation[0] - SHOP_POSITION[0]) * progress;
-                const currentLng = SHOP_POSITION[1] + (userLocation[1] - SHOP_POSITION[1]) * progress;
+                const currentLat = SHOP_POSITION[0] + (destLat - SHOP_POSITION[0]) * progress;
+                const currentLng = SHOP_POSITION[1] + (destLng - SHOP_POSITION[1]) * progress;
                 
                 setCarPos([currentLat, currentLng]);
                 
@@ -127,8 +149,8 @@ export default function MapView({ mode, onLocationSelect, userLocation }: MapVie
                 className={styles.map}
             >
                 <TileLayer
-                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
                 
                 {mode === 'picker' && (
@@ -139,14 +161,14 @@ export default function MapView({ mode, onLocationSelect, userLocation }: MapVie
                     </>
                 )}
 
-                {mode === 'tracker' && userLocation && (
+                {mode === 'tracker' && userLocation && !isNaN(Number(userLocation[0])) && (
                     <>
                         <Marker position={SHOP_POSITION} icon={ShopIcon} />
-                        <Marker position={userLocation} icon={DefaultIcon}>
+                        <Marker position={[Number(userLocation[0]), Number(userLocation[1])]} icon={DefaultIcon}>
                             <Popup>Your Delivery Address</Popup>
                         </Marker>
                         <Marker position={carPos} icon={CarIcon} />
-                        <ChangeView center={carPos} />
+                        <FitBounds bounds={[SHOP_POSITION, [Number(userLocation[0]), Number(userLocation[1])]]} />
                     </>
                 )}
             </MapContainer>

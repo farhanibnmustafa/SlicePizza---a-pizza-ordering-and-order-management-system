@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { Pizza, Size, Crust, Topping } from '@/types';
 import { useCartStore } from '@/lib/store';
@@ -90,6 +91,17 @@ export const CustomizeModal = ({ pizza, availableToppings, onClose }: CustomizeM
         return 1.0;
     };
 
+    const [mounted, setMounted] = useState(false);
+    
+    useEffect(() => {
+        setMounted(true);
+        // Optional: lock body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
+
     const handleAddToCart = () => {
 
         addItem({
@@ -103,7 +115,7 @@ export const CustomizeModal = ({ pizza, availableToppings, onClose }: CustomizeM
         onClose();
     };
 
-    return (
+    const modalContent = (
         <div className={styles.overlay}>
             <div className={`${styles.modal} glass-panel`}>
                 <div className={styles.header}>
@@ -210,4 +222,7 @@ export const CustomizeModal = ({ pizza, availableToppings, onClose }: CustomizeM
             </div>
         </div>
     );
+
+    if (!mounted) return null;
+    return createPortal(modalContent, document.body);
 };

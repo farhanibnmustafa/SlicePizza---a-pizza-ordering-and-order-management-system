@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 
+export const revalidate = 60; // Cache menu aggressively, revalidate every 60 seconds
+
 export async function GET() {
     try {
         const [pizzasRes, toppingsRes] = await Promise.all([

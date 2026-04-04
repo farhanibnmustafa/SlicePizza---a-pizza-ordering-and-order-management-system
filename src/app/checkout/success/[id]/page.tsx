@@ -33,7 +33,7 @@ export default function OrderSuccessPage() {
         };
 
         fetchOrder();
-        const interval = setInterval(fetchOrder, 5000);
+        const interval = setInterval(fetchOrder, 15000);
         return () => clearInterval(interval);
     }, [orderId]);
 

@@ -22,8 +22,8 @@ export default function CheckoutPage() {
         email: '',
         phone: '',
         address: '',
-        lat: 40.7128, // Default to a central city location
-        lng: -74.0060
+        lat: 40.7306, // Default user location distinct from shop location
+        lng: -73.9866
     });
 
     // Pre-fill name + email when auth state is available
@@ -48,7 +48,7 @@ export default function CheckoutPage() {
         return (
             <div className={styles.emptyContainer}>
                 <h2>Your cart is empty</h2>
-                <Button onClick={() => router.push('/')}>Return to Menu</Button>
+                <Button onClick={() => router.push('/#menu')}>Return to Menu</Button>
             </div>
         );
     }

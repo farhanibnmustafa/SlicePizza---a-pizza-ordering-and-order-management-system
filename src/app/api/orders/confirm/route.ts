@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
 import Stripe from 'stripe';
 import { supabaseAdmin } from '@/lib/supabase';
 import { sendOrderConfirmationEmail } from '@/lib/mail';
@@ -39,16 +39,18 @@ export async function POST(request: NextRequest) {
         
         if (updateError) throw updateError;
 
-        // Dispatch Receipt Email using Nodemailer logic
+        // Dispatch Receipt Email gracefully in the background so it never blocks checkout speed
         const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-        await sendOrderConfirmationEmail({
-            ...updatedOrder,
-            customerDetails: updatedOrder.customer_details,
-            deliveryFee: updatedOrder.delivery_fee,
-            userId: updatedOrder.user_id,
-            createdAt: updatedOrder.created_at,
-            statusHistory: updatedOrder.status_history || [],
-        } as import('@/types').Order, baseUrl);
+        after(() => {
+            sendOrderConfirmationEmail({
+                ...updatedOrder,
+                customerDetails: updatedOrder.customer_details,
+                deliveryFee: updatedOrder.delivery_fee,
+                userId: updatedOrder.user_id,
+                createdAt: updatedOrder.created_at,
+                statusHistory: updatedOrder.status_history || [],
+            } as import('@/types').Order, baseUrl).catch(err => console.error("Email failed in background:", err));
+        });
 
         return NextResponse.json({ success: true, orderId: updatedOrder.id }, { status: 200 });
 
