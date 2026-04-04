@@ -24,13 +24,10 @@ export default function OrderSuccessPage() {
         setTimeout(() => setMounted(true), 0);
         
         const fetchOrder = () => {
-            fetch('/api/orders')
+            fetch(`/api/orders/${orderId}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.orders) {
-                        const found = data.orders.find((o: Order) => o.id === orderId);
-                        if (found) setOrder(found);
-                    }
+                    if (data.order) setOrder(data.order);
                 })
                 .catch(err => console.error('Failed to fetch order for tracking:', err));
         };
@@ -43,7 +40,7 @@ export default function OrderSuccessPage() {
     if (!mounted) return null;
 
     const getStatusStep = (status: string) => {
-        const statuses = ['Pending Payment', 'Pending', 'Preparing', 'Out for Delivery', 'Delivered'];
+        const statuses = ['Pending Payment', 'Preparing', 'Out for Delivery', 'Delivered'];
         return statuses.indexOf(status);
     };
 
