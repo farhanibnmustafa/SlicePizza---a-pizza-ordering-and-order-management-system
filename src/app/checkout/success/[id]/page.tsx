@@ -40,11 +40,14 @@ export default function OrderSuccessPage() {
     if (!mounted) return null;
 
     const getStatusStep = (status: string) => {
-        const statuses = ['Pending Payment', 'Preparing', 'Out for Delivery', 'Delivered'];
-        return statuses.indexOf(status);
+        if (status === 'Cancelled') return 0;
+        if (status === 'Delivered') return 4;
+        if (status === 'Out for Delivery') return 3;
+        if (status === 'Preparing') return 2;
+        return 1; // Default for 'Pending Payment', 'Processing', or unknown
     };
 
-    const currentStep = order ? getStatusStep(order.status) : 0;
+    const currentStep = order ? getStatusStep(order.status) : 1;
 
     return (
         <div className={styles.container}>
