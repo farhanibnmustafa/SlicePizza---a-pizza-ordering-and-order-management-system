@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { CartItem } from '@/types';
 
 interface CartState {
@@ -10,25 +11,33 @@ interface CartState {
     getSubtotal: () => number;
 }
 
-export const useCartStore = create<CartState>((set, get) => ({
-    items: [],
-    addItem: (item) => set((state) => {
-        const newItem = { ...item, id: crypto.randomUUID() };
-        return { items: [...state.items, newItem] };
-    }),
-    removeItem: (id) => set((state) => ({
-        items: state.items.filter((item) => item.id !== id)
-    })),
-    updateQuantity: (id, quantity) => set((state) => ({
-        items: state.items.map((item) =>
-            item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
-        )
-    })),
-    clearCart: () => set({ items: [] }),
-    getSubtotal: () => {
-        return get().items.reduce((total, item) => total + (item.itemTotal * item.quantity), 0);
-    }
-}));
+export const useCartStore = create<CartState>()(
+    persist(
+        (set, get) => ({
+            items: [],
+            addItem: (item) => set((state) => {
+                const newItem = { ...item, id: crypto.randomUUID() };
+                return { items: [...state.items, newItem] };
+            }),
+            removeItem: (id) => set((state) => ({
+                items: state.items.filter((item) => item.id !== id)
+            })),
+            updateQuantity: (id, quantity) => set((state) => ({
+                items: state.items.map((item) =>
+                    item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
+                )
+            })),
+            clearCart: () => set({ items: [] }),
+            getSubtotal: () => {
+                return get().items.reduce((total, item) => total + (item.itemTotal * item.quantity), 0);
+            }
+        }),
+        {
+            name: 'slicepizza-cart',
+            partialize: (state) => ({ items: state.items }),
+        }
+    )
+);
 
 // ── Auth Store ─────────────────────────────────────────────────────────────────
 interface AuthUser {
