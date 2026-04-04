@@ -49,9 +49,7 @@
     background: #111 !important;
 }
 
-:global(.leaflet-tile-pane) {
-    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
-}
+
 
 :global(.leaflet-control-attribution) {
     background: rgba(0,0,0,0.5) !important;

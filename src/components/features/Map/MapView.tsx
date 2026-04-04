@@ -6,25 +6,26 @@ import 'leaflet/dist/leaflet.css';
 import { LocateFixed } from 'lucide-react';
 import styles from './Map.module.css';
 
-// Fix for default Leaflet icons in Next.js
-const DefaultIcon = L.icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
+// Fix for default Leaflet icons in Next.js using reliable divIcons 
+const DefaultIcon = L.divIcon({
+    html: `<div style="font-size: 24px; text-align: center; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));">📍</div>`,
+    className: '',
+    iconSize: [24, 24],
+    iconAnchor: [12, 24],
 });
 
 const ShopIcon = L.divIcon({
-    html: `<div class="${styles.markerLabel}">🍕 SliceRush</div>`,
+    html: `<div class="${styles.markerLabel}">🍕 SlicePizza</div>`,
     className: '',
     iconSize: [80, 20],
     iconAnchor: [40, 10],
 });
 
-const CarIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/3082/3082344.png', // Small car icon
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
+const CarIcon = L.divIcon({
+    html: `<div style="font-size: 24px; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));">🚗</div>`, 
+    className: '',
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
 });
 
 // Shop coordinates (Simulated store in a central city location)
@@ -126,8 +127,8 @@ export default function MapView({ mode, onLocationSelect, userLocation }: MapVie
                 className={styles.map}
             >
                 <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                 />
                 
                 {mode === 'picker' && (
