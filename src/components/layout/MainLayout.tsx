@@ -12,7 +12,7 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
     const isAdmin = pathname?.startsWith('/admin');
 
     if (isAdmin) {
-        return <div suppressHydrationWarning>{children}</div>;
+        return <>{children}</>;
     }
 
     return (

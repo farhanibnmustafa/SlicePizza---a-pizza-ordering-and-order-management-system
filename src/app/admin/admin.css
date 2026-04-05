@@ -351,11 +351,15 @@
 
 /* ── Recent Orders on Dashboard ───────────────────────────────────────────── */
 .admin-recent-row {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2.2fr 1.5fr 1fr;
     align-items: center;
     padding: 14px 24px;
     border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.admin-recent-row > .admin-badge {
+    justify-self: start;
 }
 
 .admin-recent-row:last-child { border-bottom: none; }
